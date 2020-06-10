@@ -138,7 +138,7 @@ class top_block(grc_wxgui.top_block_gui):
         self.osmosdr_sink_0.set_antenna('', 0)
         self.osmosdr_sink_0.set_bandwidth(0, 0)
 
-        self.epy_block_0 = epy_block_0.blk(sample_rate=samp_rate, short_impulse_len=0.0001, long_impulse_len=0.0004, packet_separator_len=0.005, packet_len=24, data=A + B + C + D + base)
+        self.epy_block_0 = epy_block_0.blk(sample_rate=samp_rate, short_impulse_len=0.00015, long_impulse_len=0.00035, packet_separator_len=0.005, packet_len=24, data=A + B + C + D + base)
 
 
 
