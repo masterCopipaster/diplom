@@ -29,7 +29,7 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
-import epy_block_0_0
+import epy_block_0
 import math
 import numpy
 import pmt
@@ -122,13 +122,13 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 1):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.rational_resampler_xxx_0_0 = filter.rational_resampler_fff(
+        self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
                 interpolation=10,
                 decimation=21,
                 taps=None,
                 fractional_bw=0.45,
         )
-        self.qtgui_time_sink_x_0_1_0 = qtgui.time_sink_c(
+        self.qtgui_time_sink_x_0_1_0 = qtgui.time_sink_f(
         	1024*3, #size
         	baud_rate*sps, #samp_rate
         	"", #name
@@ -163,12 +163,9 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in xrange(2):
+        for i in xrange(1):
             if len(labels[i]) == 0:
-                if(i % 2 == 0):
-                    self.qtgui_time_sink_x_0_1_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_1_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+                self.qtgui_time_sink_x_0_1_0.set_line_label(i, "Data {0}".format(i))
             else:
                 self.qtgui_time_sink_x_0_1_0.set_line_label(i, labels[i])
             self.qtgui_time_sink_x_0_1_0.set_line_width(i, widths[i])
@@ -183,57 +180,54 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 1):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.qtgui_time_sink_x_0_0_0_0_0_0 = qtgui.time_sink_c(
+        self.qtgui_time_sink_x_0_0_0_0_0 = qtgui.time_sink_f(
         	256*osps, #size
         	baud_rate*osps, #samp_rate
         	'Symbol Synched Output and Debug', #name
-        	3 #number of inputs
+        	4 #number of inputs
         )
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_update_time(0.1)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_y_axis(-1.5, sps+2)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_update_time(0.1)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_y_axis(-1.5, sps+2)
 
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0_0_0_0_0.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_NORM, qtgui.TRIG_SLOPE_POS, 0.1, 0.01, 0, "time_est")
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_grid(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.enable_stem_plot(False)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_tags(-1, True)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_NORM, qtgui.TRIG_SLOPE_POS, 0.1, 0.01, 0, "time_est")
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_grid(False)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_control_panel(False)
+        self.qtgui_time_sink_x_0_0_0_0_0.enable_stem_plot(False)
 
         if not True:
-          self.qtgui_time_sink_x_0_0_0_0_0_0.disable_legend()
+          self.qtgui_time_sink_x_0_0_0_0_0.disable_legend()
 
-        labels = ['Soft Bits Re', 'Soft Bits Im', 'Error', 'Instantaneous Period', 'Average Period',
-                  '(unused)', '', '', '', '']
+        labels = ['Soft Bits', 'Error', 'Instantaneous Period', 'Average Period', '',
+                  '', '', '', '', '']
         widths = [1, 1, 1, 1, 1,
                   1, 1, 1, 1, 1]
-        colors = ["blue", "magenta", "red", "green", "black",
-                  "yellow", "black", "black", "dark green", "blue"]
+        colors = ["blue", "red", "green", "black", "cyan",
+                  "magenta", "yellow", "dark red", "dark green", "blue"]
         styles = [1, 1, 1, 1, 1,
-                  0, 1, 0, 1, 1]
-        markers = [1, 0, -1, -1, -1,
+                  1, 1, 1, 1, 1]
+        markers = [0, -1, -1, -1, -1,
                    -1, -1, -1, -1, -1]
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
                   1.0, 1.0, 1.0, 1.0, 1.0]
 
-        for i in xrange(6):
+        for i in xrange(4):
             if len(labels[i]) == 0:
-                if(i % 2 == 0):
-                    self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
+                self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0_0_0_0_0_0.set_line_alpha(i, alphas[i])
+                self.qtgui_time_sink_x_0_0_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0_0_0_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0_0_0_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0_0_0_0.set_line_alpha(i, alphas[i])
 
-        self._qtgui_time_sink_x_0_0_0_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0_0_0_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_0_0_win, 3, 1, 1, 2)
+        self._qtgui_time_sink_x_0_0_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0_0_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_0_0_win, 3, 1, 1, 2)
         for r in range(3, 4):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(1, 3):
@@ -268,22 +262,18 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(2, 3):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.fir_filter_xxx_0_1_0_0_0_0 = filter.fir_filter_fff(1, ([1.0/float(sps)]*sps))
-        self.fir_filter_xxx_0_1_0_0_0_0.declare_sample_delay(int((sps-1.0)/2.0)+4)
-        self.epy_block_0_0 = epy_block_0_0.ConstMap()
-        self.digital_symbol_sync_xx_0 = digital.symbol_sync_cc(digital.TED_SIGNAL_TIMES_SLOPE_ML, sps, omega_n_norm, zeta, ted_gain, 1.5, osps, digital.constellation_bpsk().base(), digital.IR_MMSE_8TAP, 128, ([]))
+        self.fir_filter_xxx_0_1_0_0_0 = filter.fir_filter_fff(1, ([1.0/float(sps)]*sps))
+        self.fir_filter_xxx_0_1_0_0_0.declare_sample_delay(int((sps-1.0)/2.0)+4)
+        self.epy_block_0 = epy_block_0.ConstMap()
+        self.digital_symbol_sync_xx_0 = digital.symbol_sync_ff(digital.TED_MUELLER_AND_MULLER, sps, omega_n_norm, zeta, ted_gain, 1.5, osps, digital.constellation_bpsk().base(), digital.IR_MMSE_8TAP, 128, ([]))
         self.blocks_vector_source_x_0_0_1_0 = blocks.vector_source_f([1,0]*(4*12*0)+[1,1,0,1,0,1,0,1]*12+[1,0,1,1,1,1,1,0,0,1]+[1,1,1,1,0,1,1,0,0,1]+[1,0,1,1,1,1,1,0,0,1]+[0,1,1,1,0,1,1,0,1,0]+[0,0,0,0,0,1,0,1,0,1,1,0,0,1,1,1,0,0,0,0]+[2]*128, True, 1, [packet_time_est_tag])
         self.blocks_vector_source_x_0_0_1 = blocks.vector_source_f([1]+[0]*7, True, 1, [])
         self.blocks_vector_source_x_0_0_0 = blocks.vector_source_f((0,0,0,0,1,1,1,1), True, 1, [])
         self.blocks_vector_source_x_0_0 = blocks.vector_source_f((0, 1, 0, 1, 0, 1, 0, 1), True, 1, [])
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, baud_rate*10,True)
         self.blocks_short_to_float_1 = blocks.short_to_float(1, 1)
-        self.blocks_repeat_0_0 = blocks.repeat(gr.sizeof_float*1, sps*2)
+        self.blocks_repeat_0 = blocks.repeat(gr.sizeof_float*1, sps*2)
         self.blocks_multiply_matrix_xx_0 = blocks.multiply_matrix_ff((data_src,), gr.TPP_ALL_TO_ALL)
-        self.blocks_multiply_const_vxx_1 = blocks.multiply_const_vcc((0.707+0.707j, ))
-        self.blocks_float_to_complex_3 = blocks.float_to_complex(1)
-        self.blocks_float_to_complex_1_0 = blocks.float_to_complex(1)
-        self.blocks_float_to_complex_0_0 = blocks.float_to_complex(1)
         self.analog_random_source_x_0 = blocks.vector_source_s(map(int, numpy.random.randint(0, 2, 16384)), True)
 
 
@@ -292,26 +282,22 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.analog_random_source_x_0, 0), (self.blocks_short_to_float_1, 0))
-        self.connect((self.blocks_float_to_complex_0_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0_0, 1))
-        self.connect((self.blocks_float_to_complex_1_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0_0, 2))
-        self.connect((self.blocks_float_to_complex_3, 0), (self.blocks_multiply_const_vxx_1, 0))
-        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.digital_symbol_sync_xx_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.qtgui_time_sink_x_0_1_0, 0))
         self.connect((self.blocks_multiply_matrix_xx_0, 0), (self.blocks_throttle_0, 0))
-        self.connect((self.blocks_repeat_0_0, 0), (self.rational_resampler_xxx_0_0, 0))
+        self.connect((self.blocks_repeat_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_short_to_float_1, 0), (self.blocks_multiply_matrix_xx_0, 0))
-        self.connect((self.blocks_throttle_0, 0), (self.epy_block_0_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.epy_block_0, 0))
         self.connect((self.blocks_vector_source_x_0_0, 0), (self.blocks_multiply_matrix_xx_0, 2))
         self.connect((self.blocks_vector_source_x_0_0_0, 0), (self.blocks_multiply_matrix_xx_0, 1))
         self.connect((self.blocks_vector_source_x_0_0_1, 0), (self.blocks_multiply_matrix_xx_0, 3))
         self.connect((self.blocks_vector_source_x_0_0_1_0, 0), (self.blocks_multiply_matrix_xx_0, 4))
-        self.connect((self.digital_symbol_sync_xx_0, 2), (self.blocks_float_to_complex_0_0, 1))
-        self.connect((self.digital_symbol_sync_xx_0, 1), (self.blocks_float_to_complex_0_0, 0))
-        self.connect((self.digital_symbol_sync_xx_0, 3), (self.blocks_float_to_complex_1_0, 0))
-        self.connect((self.digital_symbol_sync_xx_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0_0, 0))
-        self.connect((self.epy_block_0_0, 0), (self.blocks_repeat_0_0, 0))
-        self.connect((self.fir_filter_xxx_0_1_0_0_0_0, 0), (self.blocks_float_to_complex_3, 0))
-        self.connect((self.rational_resampler_xxx_0_0, 0), (self.fir_filter_xxx_0_1_0_0_0_0, 0))
+        self.connect((self.digital_symbol_sync_xx_0, 3), (self.qtgui_time_sink_x_0_0_0_0_0, 3))
+        self.connect((self.digital_symbol_sync_xx_0, 2), (self.qtgui_time_sink_x_0_0_0_0_0, 2))
+        self.connect((self.digital_symbol_sync_xx_0, 1), (self.qtgui_time_sink_x_0_0_0_0_0, 1))
+        self.connect((self.digital_symbol_sync_xx_0, 0), (self.qtgui_time_sink_x_0_0_0_0_0, 0))
+        self.connect((self.epy_block_0, 0), (self.blocks_repeat_0, 0))
+        self.connect((self.fir_filter_xxx_0_1_0_0_0, 0), (self.digital_symbol_sync_xx_0, 0))
+        self.connect((self.fir_filter_xxx_0_1_0_0_0, 0), (self.qtgui_time_sink_x_0_1_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.fir_filter_xxx_0_1_0_0_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "symbol_sync_test_float")
@@ -374,9 +360,9 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
     def set_sps(self, sps):
         self.sps = sps
         self.qtgui_time_sink_x_0_1_0.set_samp_rate(self.baud_rate*self.sps)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_y_axis(-1.5, self.sps+2)
-        self.fir_filter_xxx_0_1_0_0_0_0.set_taps(([1.0/float(self.sps)]*self.sps))
-        self.blocks_repeat_0_0.set_interpolation(self.sps*2)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_y_axis(-1.5, self.sps+2)
+        self.fir_filter_xxx_0_1_0_0_0.set_taps(([1.0/float(self.sps)]*self.sps))
+        self.blocks_repeat_0.set_interpolation(self.sps*2)
 
     def get_proportional_gain_label(self):
         return self.proportional_gain_label
@@ -397,7 +383,7 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
 
     def set_osps(self, osps):
         self.osps = osps
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_samp_rate(self.baud_rate*self.osps)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_samp_rate(self.baud_rate*self.osps)
 
     def get_integral_gain_label(self):
         return self.integral_gain_label
@@ -420,7 +406,7 @@ class symbol_sync_test_float(gr.top_block, Qt.QWidget):
     def set_baud_rate(self, baud_rate):
         self.baud_rate = baud_rate
         self.qtgui_time_sink_x_0_1_0.set_samp_rate(self.baud_rate*self.sps)
-        self.qtgui_time_sink_x_0_0_0_0_0_0.set_samp_rate(self.baud_rate*self.osps)
+        self.qtgui_time_sink_x_0_0_0_0_0.set_samp_rate(self.baud_rate*self.osps)
         self.blocks_throttle_0.set_sample_rate(self.baud_rate*10)
 
 

@@ -1427,7 +1427,7 @@
     </param>
     <param>
       <key>ted_type</key>
-      <value>digital.TED_SIGNAL_TIMES_SLOPE_ML</value>
+      <value>digital.TED_EARLY_LATE</value>
     </param>
   </block>
   <block>

@@ -45,7 +45,7 @@ class top_block(grc_wxgui.top_block_gui):
         self.samp_rate = samp_rate = 32000
         self.rf_samp_rate = rf_samp_rate = 2048000
         self.rf_gain = rf_gain = 0
-        self.freq = freq = 434000000
+        self.freq = freq = 434040000
         self.base = base = 0x9F78B0
         self.D = D = 0
         self.C = C = 0
@@ -138,7 +138,7 @@ class top_block(grc_wxgui.top_block_gui):
         self.osmosdr_sink_0.set_antenna('', 0)
         self.osmosdr_sink_0.set_bandwidth(0, 0)
 
-        self.epy_block_0 = epy_block_0.blk(sample_rate=samp_rate, short_impulse_len=0.00015, long_impulse_len=0.00035, packet_separator_len=0.005, packet_len=24, data=A + B + C + D + base)
+        self.epy_block_0 = epy_block_0.blk(sample_rate=samp_rate, short_impulse_len=0.0002, long_impulse_len=0.0004, packet_separator_len=0.005, packet_len=24, data=A + B + C + D + base)
 
 
 
