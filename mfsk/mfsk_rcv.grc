@@ -817,7 +817,7 @@
     </param>
     <param>
       <key>ted_type</key>
-      <value>digital.TED_MUELLER_AND_MULLER</value>
+      <value>digital.TED_EARLY_LATE</value>
     </param>
   </block>
   <block>
