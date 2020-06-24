@@ -21,7 +21,6 @@ import sys
 sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
 
 from bfsk_rcv import bfsk_rcv  # grc-generated hier_block
-from bit_err_test import bit_err_test  # grc-generated hier_block
 from fsk_transm import fsk_transm  # grc-generated hier_block
 from gnuradio import blocks
 from gnuradio import channels
@@ -31,7 +30,6 @@ from gnuradio import wxgui
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from gnuradio.wxgui import forms
-from gnuradio.wxgui import numbersink2
 from gnuradio.wxgui import scopesink2
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
@@ -84,33 +82,10 @@ class top_block(grc_wxgui.top_block_gui):
         	proportion=1,
         )
         self.Add(_freq_offset_sizer)
-        _delay_sizer = wx.BoxSizer(wx.VERTICAL)
-        self._delay_text_box = forms.text_box(
-        	parent=self.GetWin(),
-        	sizer=_delay_sizer,
-        	value=self.delay,
-        	callback=self.set_delay,
-        	label='delay',
-        	converter=forms.int_converter(),
-        	proportion=0,
-        )
-        self._delay_slider = forms.slider(
-        	parent=self.GetWin(),
-        	sizer=_delay_sizer,
-        	value=self.delay,
-        	callback=self.set_delay,
-        	minimum=0,
-        	maximum=100,
-        	num_steps=100,
-        	style=wx.SL_HORIZONTAL,
-        	cast=int,
-        	proportion=1,
-        )
-        self.Add(_delay_sizer)
-        self.wxgui_scopesink2_2 = scopesink2.scope_sink_f(
+        self.wxgui_scopesink2_1 = scopesink2.scope_sink_f(
         	self.GetWin(),
         	title='Scope Plot',
-        	sample_rate=samp_rate,
+        	sample_rate=symb_rate,
         	v_scale=0,
         	v_offset=0,
         	t_scale=0,
@@ -120,24 +95,21 @@ class top_block(grc_wxgui.top_block_gui):
         	trig_mode=wxgui.TRIG_MODE_AUTO,
         	y_axis_label='Counts',
         )
-        self.Add(self.wxgui_scopesink2_2.win)
-        self.wxgui_numbersink2_0 = numbersink2.number_sink_f(
+        self.Add(self.wxgui_scopesink2_1.win)
+        self.wxgui_scopesink2_0 = scopesink2.scope_sink_f(
         	self.GetWin(),
-        	unit='',
-        	minval=0,
-        	maxval=0.4,
-        	factor=1 / error_count_decim,
-        	decimal_places=10,
-        	ref_level=0,
-        	sample_rate=symb_rate / error_count_decim,
-        	number_rate=1,
-        	average=False,
-        	avg_alpha=None,
-        	label='Bit Error Probability',
-        	peak_hold=False,
-        	show_gauge=True,
+        	title='Scope Plot',
+        	sample_rate=samp_rate,
+        	v_scale=0,
+        	v_offset=0,
+        	t_scale=0,
+        	ac_couple=False,
+        	xy_mode=False,
+        	num_inputs=3,
+        	trig_mode=wxgui.TRIG_MODE_AUTO,
+        	y_axis_label='Counts',
         )
-        self.Add(self.wxgui_numbersink2_0.win)
+        self.Add(self.wxgui_scopesink2_0.win)
         _noise_volt_db_sizer = wx.BoxSizer(wx.VERTICAL)
         self._noise_volt_db_text_box = forms.text_box(
         	parent=self.GetWin(),
@@ -165,6 +137,29 @@ class top_block(grc_wxgui.top_block_gui):
             samp_rate=samp_rate,
             symb_rate=symb_rate,
         )
+        _delay_sizer = wx.BoxSizer(wx.VERTICAL)
+        self._delay_text_box = forms.text_box(
+        	parent=self.GetWin(),
+        	sizer=_delay_sizer,
+        	value=self.delay,
+        	callback=self.set_delay,
+        	label='delay',
+        	converter=forms.int_converter(),
+        	proportion=0,
+        )
+        self._delay_slider = forms.slider(
+        	parent=self.GetWin(),
+        	sizer=_delay_sizer,
+        	value=self.delay,
+        	callback=self.set_delay,
+        	minimum=0,
+        	maximum=100,
+        	num_steps=100,
+        	style=wx.SL_HORIZONTAL,
+        	cast=int,
+        	proportion=1,
+        )
+        self.Add(_delay_sizer)
         self.channels_channel_model_0_0 = channels.channel_model(
         	noise_voltage=noise_volt,
         	frequency_offset=freq_offset,
@@ -177,10 +172,7 @@ class top_block(grc_wxgui.top_block_gui):
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex*1, samp_rate,True)
         self.blocks_copy_0 = blocks.copy(gr.sizeof_char*1)
         self.blocks_copy_0.set_enabled(True)
-        self.bit_err_test_0 = bit_err_test(
-            delay=delay,
-            error_count_decim=error_count_decim,
-        )
+        self.blocks_char_to_float_1 = blocks.char_to_float(1, 1)
         self.bfsk_rcv_0 = bfsk_rcv(
             samp_rate=samp_rate,
             symb_rate=symb_rate,
@@ -191,10 +183,11 @@ class top_block(grc_wxgui.top_block_gui):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.bfsk_rcv_0, 3), (self.bit_err_test_0, 1))
-        self.connect((self.bit_err_test_0, 1), (self.wxgui_numbersink2_0, 0))
-        self.connect((self.bit_err_test_0, 0), (self.wxgui_scopesink2_2, 0))
-        self.connect((self.blocks_copy_0, 0), (self.bit_err_test_0, 0))
+        self.connect((self.bfsk_rcv_0, 3), (self.blocks_char_to_float_1, 0))
+        self.connect((self.bfsk_rcv_0, 0), (self.wxgui_scopesink2_0, 0))
+        self.connect((self.bfsk_rcv_0, 1), (self.wxgui_scopesink2_0, 1))
+        self.connect((self.bfsk_rcv_0, 2), (self.wxgui_scopesink2_0, 2))
+        self.connect((self.blocks_char_to_float_1, 0), (self.wxgui_scopesink2_1, 0))
         self.connect((self.blocks_copy_0, 0), (self.fsk_transm_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.channels_channel_model_0_0, 0))
         self.connect((self.blocks_vector_source_x_0_0, 0), (self.blocks_copy_0, 0))
@@ -215,6 +208,7 @@ class top_block(grc_wxgui.top_block_gui):
 
     def set_symb_rate(self, symb_rate):
         self.symb_rate = symb_rate
+        self.wxgui_scopesink2_1.set_sample_rate(self.symb_rate)
         self.fsk_transm_0.set_symb_rate(self.symb_rate)
         self.bfsk_rcv_0.set_symb_rate(self.symb_rate)
 
@@ -223,7 +217,7 @@ class top_block(grc_wxgui.top_block_gui):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.wxgui_scopesink2_2.set_sample_rate(self.samp_rate)
+        self.wxgui_scopesink2_0.set_sample_rate(self.samp_rate)
         self.fsk_transm_0.set_samp_rate(self.samp_rate)
         self.blocks_throttle_0.set_sample_rate(self.samp_rate)
         self.bfsk_rcv_0.set_samp_rate(self.samp_rate)
@@ -255,7 +249,6 @@ class top_block(grc_wxgui.top_block_gui):
 
     def set_error_count_decim(self, error_count_decim):
         self.error_count_decim = error_count_decim
-        self.bit_err_test_0.set_error_count_decim(self.error_count_decim)
 
     def get_delay(self):
         return self.delay
@@ -264,7 +257,6 @@ class top_block(grc_wxgui.top_block_gui):
         self.delay = delay
         self._delay_slider.set_value(self.delay)
         self._delay_text_box.set_value(self.delay)
-        self.bit_err_test_0.set_delay(self.delay)
 
 
 def main(top_block_cls=top_block, options=None):
