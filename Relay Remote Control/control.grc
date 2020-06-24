@@ -545,7 +545,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>long_impulse_len</key>
-      <value>0.0004</value>
+      <value>0.0011</value>
     </param>
     <param>
       <key>packet_len</key>
@@ -561,7 +561,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     </param>
     <param>
       <key>short_impulse_len</key>
-      <value>0.0002</value>
+      <value>0.0003</value>
     </param>
   </block>
   <block>
